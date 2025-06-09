@@ -1,4 +1,4 @@
-FROM registry.mthreads.com/mcconline/musa-pytorch-release-public:rc3.1.0-v1.3.0-S4000-py310
+FROM registry.mthreads.com/mcconline/vllm-musa-qy2-py310:v0.7.3
 RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
