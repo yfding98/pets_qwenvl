@@ -1,7 +1,10 @@
 services:
   vllm-qwen_vl:
     container_name: vllm-qwen_vl
-    image: registry.mthreads.com/mcconline/vllm-musa-qy2-py310:v0.7.3
+    build:
+        context: ../
+        dockerfile: docker/Dockerfile
+    image: ding/qwen_vl:v1
     privileged: true
     ipc: host
     shm_size: "80gb"
@@ -15,8 +18,8 @@ services:
       - /bin/bash
       - -c
       - |        
-        python app.py
+        python app.py || tail -f /dev/null
     ports:
       - "8020:8000"
-    networks:
-      - ragflow
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
