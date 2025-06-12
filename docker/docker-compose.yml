@@ -4,25 +4,24 @@ services:
     image: registry.mthreads.com/mcconline/vllm-musa-qy2-py310:v0.7.3
     privileged: true
     ipc: host
-    shm_size: "80gb"
+    shm_size: "160gb"
     working_dir: /app
     entrypoint: []
     environment:
       - MTHREADS_VISIBLE_DEVICES=all
     volumes:
       - /data/models:/models
-      - /data/dyf/workspace/pets_qwenvl/docker/vllm-server/api_server.py:/usr/local/lib/python3.10/dist-packages/vllm/entrypoints/api_server.py
     command:
-      - /bin/bash
+      - bash
       - -c
       - |        
-        python -m vllm.entrypoints.api_server \
-        --host 0.0.0.0 \
-        --port 8000 \
-        --model Qwen/Qwen2.5-VL-72B-Instruct \
-        --dtype bfloat16 \
-        --tensor-parallel-size 8 \
-        --enforce-eager \
+        vllm serve /models/Qwen2.5-VL-72B-Instruct/ \
+        --gpu-memory-utilization 0.8 \
+        --served-model-name Qwen2.5-VL-72B-Instruct \
+        --max-model-len 8192 \
+        --max-num-seqs 64 \
+        -tp 8 \
+        -pp 1 \
         --trust-remote-code || tail -f /dev/null
     ports:
       - "8020:8000"
